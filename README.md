@@ -5,5 +5,6 @@
 2. The web page can be accessed through http://localhost
 3. postman collection export attached with attachment.
 4. Go to mysql commandline and run 
-    `mysqldum -u toduser -p vmachine < /var/www/vmachine.sql`
+    `mysqldum -u toduser -p vmachine < /var/www/vmachine.sql` (password:todo@77855# can change in docker and env)
+    
 
