@@ -1,0 +1,5 @@
+.git
+src/vendor/*
+docker/logs/nginx/*
+docker/logs/mysql/*
+docker/mysql/data/*
