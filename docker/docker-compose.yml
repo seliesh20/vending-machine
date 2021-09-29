@@ -1,0 +1,49 @@
+version: '3'
+
+services: 
+  php-fpm:
+    build:
+      context: ./php-fpm 
+    volumes:
+      - ../src:/var/www
+    networks:
+      - app-network
+    ports:
+      - "5800:5800"
+      - "5900:5900"
+  
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - ../src:/var/www
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/sites/:/etc/nginx/sites-available
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+      - ./logs:/var/log
+    depends_on:
+      - php-fpm
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  mysql:
+    build:
+      context: ./mysql
+    volumes:
+      - ../src:/var/www
+      - ./mysql/data:/var/lib/mysql      
+      - ./logs:/var/log 
+    environment:
+      MYSQL_ROOT_PASSWORD : "root@7785#"
+      MYSQL_DATABASE : "vmachine"
+      MYSQL_USER : "todouser"
+      MYSQL_PASSWORD : "todo@77855#"
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
