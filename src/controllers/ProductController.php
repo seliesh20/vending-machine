@@ -48,7 +48,7 @@ class ProductController{
 
     public function view()
     {
-        $params = Request::getParams();
+        $params = array_merge(['product_id'=> 0], Request::getParams());
         $product = $this->productModel->getProduct($params['product_id']);
         if(is_array($product) && count($product)){
             Response::json([
@@ -67,7 +67,7 @@ class ProductController{
      */
     public function update()
     {
-        $params = Request::getParams();
+        $params = array_merge(['user_id' => 0, 'role_id' => 0, 'product_id' => 0] , Request::getParams());
         $product = $this->productModel->getProduct($params['product_id']);
         if(is_array($product) && count($product)) {
             if(!($product['user_id'] == Request::getParam('user_id')
@@ -75,31 +75,31 @@ class ProductController{
                     Response::json([
                         'status' => 'failure',
                         'reason' => 'User is not a seller'
-                    ]); exit;
-            }
-            
-            $save_array = [];
-            if(isset($params['product_name']) && ($params["product_name"] != $product["product_name"])){
-                $save_array[] = 'product_name="'.$params['product_name'].'"';
-            }
-            if(isset($params['amount_available']) && ($params["amount_available"] != $product["amount_available"])){
-                $save_array[] = 'amount_available='.$params['amount_available'];
-            }
-            if(isset($params['cost']) && ($params["cost"] != $product["cost"])){
-                $save_array[] = 'cost='.$params['cost'];
-            }
-            if(is_array($save_array) && count($save_array)){
-                $this->productModel->update($save_array, $params['product_id']);
-                $product = $this->productModel->getProduct($params['product_id']);
-                Response::json([
-                    'status' => 'success',
-                    'data' => ['product'=>$product]
-                ]);
+                    ]); 
             } else {
-                Response::json([
-                    'status' => 'failure',
-                    'reason' => 'Invalid Fields!!'
-                ]);
+                $save_array = [];
+                if(isset($params['product_name']) && ($params["product_name"] != $product["product_name"])){
+                    $save_array[] = 'product_name="'.$params['product_name'].'"';
+                }
+                if(isset($params['amount_available']) && ($params["amount_available"] != $product["amount_available"])){
+                    $save_array[] = 'amount_available='.$params['amount_available'];
+                }
+                if(isset($params['cost']) && ($params["cost"] != $product["cost"])){
+                    $save_array[] = 'cost='.$params['cost'];
+                }
+                if(is_array($save_array) && count($save_array)){
+                    $this->productModel->update($save_array, $params['product_id']);
+                    $product = $this->productModel->getProduct($params['product_id']);
+                    Response::json([
+                        'status' => 'success',
+                        'data' => ['product'=>$product]
+                    ]);
+                } else {
+                    Response::json([
+                        'status' => 'failure',
+                        'reason' => 'Invalid Fields!!'
+                    ]);
+                }
             }
         } else {
             Response::json([
@@ -117,20 +117,21 @@ class ProductController{
             Response::json([
                 'status' => 'failure',
                 'reason' => 'User is not a seller'
-            ]); exit;
-        }
-        $params = Request::getParams();
-        $product = $this->productModel->getProduct($params['product_id']);
-        if(is_array($product) && count($product) && $product['user_id'] == Request::getParam('user_id')){
-            $this->productModel->delete($params['product_id']);
-            Response::json([
-                'status' => 'success'                
-            ]);
+            ]); 
         } else {
-            Response::json([
-                'status' => 'failure',
-                'reason' => 'Product not created by this seller!!'
-            ]);
-        }
+            $params = Request::getParams();
+            $product = $this->productModel->getProduct($params['product_id']);
+            if(is_array($product) && count($product) && $product['user_id'] == Request::getParam('user_id')){
+                $this->productModel->delete($params['product_id']);
+                Response::json([
+                    'status' => 'success'                
+                ]);
+            } else {
+                Response::json([
+                    'status' => 'failure',
+                    'reason' => 'Product not created by this seller!!'
+                ]);
+            }
+        }        
     }
 }
