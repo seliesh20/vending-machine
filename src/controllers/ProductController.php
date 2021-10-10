@@ -129,7 +129,7 @@ class ProductController{
         } else {
             Response::json([
                 'status' => 'failure',
-                'reason' => 'Invalid Product!!'
+                'reason' => 'Product not created by this seller!!'
             ]);
         }
     }

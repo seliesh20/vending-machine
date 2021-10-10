@@ -8,7 +8,7 @@ class AuthController {
  
     public function login()
     {
-        $params = Request::getParams();
+        $params = array_merge(['email'=>'', 'password'=>''], Request::getParams());
         $usermodel = new UserModel();
         $user = $usermodel->checkAuth($params['email'], $params['password']);        
         if(is_array($user) && count($user)){

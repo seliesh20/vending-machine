@@ -8,6 +8,8 @@ services:
       - ../src:/var/www
     networks:
       - app-network
+    env_file:
+    - ./.env
     ports:
       - "5800:5800"
       - "5900:5900"
@@ -35,11 +37,8 @@ services:
       - ../src:/var/www
       - ./mysql/data:/var/lib/mysql      
       - ./logs:/var/log 
-    environment:
-      MYSQL_ROOT_PASSWORD : "root@7785#"
-      MYSQL_DATABASE : "vmachine"
-      MYSQL_USER : "todouser"
-      MYSQL_PASSWORD : "todo@77855#"
+    env_file:
+      - ./.env
     ports:
       - "3306:3306"
     networks:

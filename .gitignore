@@ -1,5 +1,6 @@
 .git
 src/vendor/*
+docker/.env
 docker/logs/nginx/*
 docker/logs/mysql/*
 docker/mysql/data/*
