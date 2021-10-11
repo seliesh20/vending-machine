@@ -38,6 +38,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` VALUES (1,'Testing 1',0,20,1);
 INSERT INTO `products` VALUES (2,'Testing 2',100,20,1);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -119,6 +120,8 @@ CREATE TABLE `users` (
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` VALUES (1,'Test User','test@test.com','dGVzdEAxMjM=',0,2,'620a65604c77013','620a65604c77013c49dabb94d');
+INSERT INTO `users` VALUES (2,'Test Buyer','buyer@test.com','dGVzdEAxMjM=',0,3,'620a65604c88013','620a65604c88013c49dabb94d');
+INSERT INTO `users` VALUES (3,'Test Buyer1','buyer@test.com','dGVzdEAxMjM=',100,3,'620a65604c99013','620a65604c99013c49dabb94d');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
