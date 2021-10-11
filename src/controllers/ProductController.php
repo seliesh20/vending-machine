@@ -33,7 +33,7 @@ class ProductController{
                 } else {
                     Response::json([
                         'status' => 'failure',
-                        'reason' => 'Invalid Amount choose from 5,10,20,50 and 100 for deposit!!'
+                        'reason' => 'Invalid Amount choose from 5,10,20,50 and 100 for product cost!!'
                     ]);
                 }
             }

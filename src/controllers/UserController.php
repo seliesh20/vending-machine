@@ -1,6 +1,7 @@
 <?php
 namespace VendMachine\contollers;
 use \VendMachine\library\Request;
+use \VendMachine\library\Encrypt;
 use \VendMachine\library\Response;
 use \VendMachine\models\UserModel;
 
@@ -40,7 +41,7 @@ class UserController{
 
     public function view()
     {
-        $params = Request::getParams();
+        $params = array_merge(['user_id'=>0], Request::getParams());
         $user = $this->usermodel->getUser($params['user_id']);
         if(is_array($user) && count($user)){
             Response::json([
@@ -50,21 +51,21 @@ class UserController{
         } else {
             Response::json([
                 'status' => 'failure',
-                'reason' => 'Invalid Product!!'
+                'reason' => 'Invalid User!!'
             ]);
         }
     }
 
     public function update()
     {
-        $params = Request::getParams();
+        $params = array_merge(['user_id'=>0], Request::getParams());
         $user = $this->usermodel->getUser($params['user_id']);
         if(is_array($user) && count($user)){
             $save_array = [];
             if(isset($params['name']) && ($params["name"] != $user["name"])){
                 $save_array[] = 'name="'.$params['name'].'"';
             }
-            if(isset($params['password']) && ($params["password"] != $user["password"])){
+            if(isset($params['password']) && (Encrypt::hashString($params["password"]) != $user["password"])){
                 $save_array[] = 'password='.$params['password'];
             }            
             if(is_array($save_array) && count($save_array)){
@@ -74,11 +75,16 @@ class UserController{
                     'status' => 'success',
                     'data' => ['user'=>$user]
                 ]);
+            } else {
+                Response::json([
+                    'status' => 'failure',
+                    'reason' => 'No change in user email and password'
+                ]);
             }
         } else {
             Response::json([
                 'status' => 'failure',
-                'reason' => 'Invalid Product!!'
+                'reason' => 'Invalid User!!'
             ]);
         }
     }
@@ -88,10 +94,10 @@ class UserController{
      */
     public function delete()
     {
-        $params = Request::getParams();
+        $params = array_merge(['user_id' => 0], Request::getParams());
         $users = $this->usermodel->getUser($params['user_id']);
         if(is_array($users) && count($users)){
-            $this->usermodel->delete($params['product_id']);
+            $this->usermodel->delete($params['user_id']);
             Response::json([
                 'status' => 'success'                
             ]);

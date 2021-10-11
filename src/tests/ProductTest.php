@@ -14,8 +14,10 @@ use VendMachine\library\Main;
 use VendMachine\library\Request;
 
 final class ProductTest extends TestCase{
+
     public function testCreateWithoutUserRole()
     {
+        $main = new Main();
         $productController = new ProductController();
         $this->expectOutputString('{"status":"failure","reason":"User is not a seller"}');
         $productController->create();
@@ -23,6 +25,7 @@ final class ProductTest extends TestCase{
     
     public function testCreateWithoutRequiredFields()
     {
+        $main = new Main();
         $productController = new ProductController();
         $main = new Main();
         $main->request->setParams(['user_role'=>2]);
@@ -32,15 +35,17 @@ final class ProductTest extends TestCase{
 
     public function testCreateInvalidAmount()
     {
+        $main = new Main();
         $productController = new ProductController();
         $main = new Main();
         $main->request->setParams(['user_role'=>2, 'product_name'=>'test', 'amount_available'=>500, 'cost'=>200]);
-        $this->expectOutputString('{"status":"failure","reason":"Invalid Amount choose from 5,10,20,50 and 100 for deposit!!"}');
+        $this->expectOutputString('{"status":"failure","reason":"Invalid Amount choose from 5,10,20,50 and 100 for product cost!!"}');
         $productController->create();
     }
 
     public function testViewWithoutProductId()
     {
+        $main = new Main();
         $productController = new ProductController();        
         $this->expectOutputString('{"status":"failure","reason":"Invalid Product!!"}');
         $productController->view();
@@ -48,6 +53,7 @@ final class ProductTest extends TestCase{
 
     public function testUpdateWithoutProductId()
     {
+        $main = new Main();
         $productController = new ProductController();        
         $this->expectOutputString('{"status":"failure","reason":"Invalid Product!!"}');
         $productController->update();

@@ -2,6 +2,7 @@
 include_once './vendor/autoload.php';
 include_once './library/Request.php';
 include_once './library/Response.php';
+include_once 'library/Encrypt.php';
 include_once './library/Models.php';
 include_once './library/Route.php';
 include_once './library/Main.php';
@@ -11,7 +12,8 @@ include_once './controllers/AuthController.php';
 use PHPUnit\Framework\TestCase;
 use \VendMachine\contollers\AuthController;
 use VendMachine\library\Main;
-use VendMachine\library\Request;
+use VendMachine\library\Encrypt;
+use VendMachine\models\UserModel;
 
 final class AuthTest extends TestCase{
     public function testLoginSuccess()
@@ -19,8 +21,10 @@ final class AuthTest extends TestCase{
         $authController = new AuthController();
         //with setting parameters
         $main = new Main();
-        $main->request->setParams(['email'=>'test@test.com', 'password'=>'test@123']);
-        $this->expectOutputString('{"status":"success","data":{"api_key":"620a65604c77013c49dabb94d"}}');
+        $userModel = new UserModel();
+        $user = $userModel->getUser(1);
+        $main->request->setParams(['email'=>$user['email'], 'password'=>Encrypt::unhashString($user['password'])]);
+        $this->expectOutputString('{"status":"success","data":{"api_key":"'.$user["api_key"].'"}}');
         $result = $authController->login();        
     }
 

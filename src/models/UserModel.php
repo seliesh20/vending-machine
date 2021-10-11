@@ -1,6 +1,7 @@
 <?php 
 namespace VendMachine\models;
 use VendMachine\library\Models;
+use VendMachine\library\Encrypt;
 
 class UserModel extends Models{
     
@@ -15,7 +16,7 @@ class UserModel extends Models{
         if($this->db->query('insert into '
             .' users(name, email, password, deposit, role_id, api_token, api_key)'
             .' values("'.$params['name'].'", "'.$params['email'].'", "'
-                .base64_encode($params['password']).'",'.$params['deposit'].","
+                .Encrypt::hashString($params['password']).'",'.$params['deposit'].","
                 .$params['role_id'].', "'.$apitoken.'", "'.$apikey.'")')){
                 $query = $this->db->query("select LAST_INSERT_ID() id");
                 $row = $query->fetch();
@@ -38,14 +39,14 @@ class UserModel extends Models{
     }
     public function update($save_array, $user_id)
     {
-        $this->db->query('update products set '.implode(",", $save_array)." where id=".$user_id);
+        $this->db->query('update users set '.implode(",", $save_array)." where id=".$user_id);
     }
     /**
      * Delete User
      */
     public function delete($user_id)
     {
-        $this->db->query('delete from products where id='.$user_id);
+        $this->db->query('delete from users where id='.$user_id);
     }
     /**
      * Check Auth
@@ -53,7 +54,7 @@ class UserModel extends Models{
     public function checkAuth($email, $password)
     {
         $query = $this->db->query('select * from users where '
-            .'email="'.$email.'" and password="'.base64_encode($password).'"');
+            .'email="'.$email.'" and password="'.Encrypt::hashString($password).'"');
         if($row=$query->fetch()){
             return $row;
         }
